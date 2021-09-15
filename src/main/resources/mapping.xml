@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozermapper.github.io/schema/bean-mapping"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://dozermapper.github.io/schema/bean-mapping http://dozermapper.github.io/schema/bean-mapping.xsd">
+
+    <mapping>
+        <class-a>bordero.dto.PlayDTO</class-a>
+        <class-b>bordero.backend.model.Play</class-b>
+        <field>
+            <a is-accessible="true">id</a>
+            <b>id</b>
+        </field>
+        <field>
+            <a is-accessible="true">code</a>
+            <b>code</b>
+        </field>
+        <field>
+            <a is-accessible="true">name</a>
+            <b>name</b>
+        </field>
+        <field>
+            <a is-accessible="true">type</a>
+            <b>type</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>bordero.dto.CustomerDTO</class-a>
+        <class-b>bordero.backend.model.Customer</class-b>
+        <field>
+            <a is-accessible="true">id</a>
+            <b>id</b>
+        </field>
+        <field>
+            <a is-accessible="true">name</a>
+            <b>name</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>bordero.dto.PerformanceDTO</class-a>
+        <class-b>bordero.backend.model.Performance</class-b>
+        <field>
+            <a is-accessible="true">id</a>
+            <b>id</b>
+        </field>
+        <field>
+            <a is-accessible="true">bordero</a>
+            <b>bordero</b>
+        </field>
+        <field>
+            <a is-accessible="true">audience</a>
+            <b>audience</b>
+        </field>
+        <field>
+            <a is-accessible="true">play</a>
+            <b>play</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>bordero.dto.BorderoDTO</class-a>
+        <class-b>bordero.backend.model.Bordero</class-b>
+        <field>
+            <a is-accessible="true">id</a>
+            <b>id</b>
+        </field>
+        <field>
+            <a is-accessible="true">date</a>
+            <b>date</b>
+        </field>
+        <field>
+            <a is-accessible="true">customer</a>
+            <b>customer</b>
+        </field>
+    </mapping>
+
+</mappings>
+
+
+
