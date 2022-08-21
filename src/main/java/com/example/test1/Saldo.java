@@ -3,9 +3,10 @@ package com.example.test1;
 
 
 public class Saldo {
+
     public double saldo;
 
-    Saldo (){}
+    Saldo (){this.saldo = 0;}
 
     Saldo(double saldo){
         this.saldo = saldo;
@@ -14,5 +15,6 @@ public class Saldo {
     double getSaldo(){
         return saldo;
     }
+
 }
 

@@ -10,7 +10,7 @@ public class TransaccionModel {
     private @Id
     @GeneratedValue Long id;
     public double monto;
-    public TRANSACTION_TYPE ttype;
+    private TRANSACTION_TYPE ttype;
 
     public TransaccionModel(double monto){
         this.monto = monto;
@@ -18,6 +18,10 @@ public class TransaccionModel {
 
     public TransaccionModel() {
 
+    }
+
+    public void setType(TRANSACTION_TYPE ttype) {
+        this.ttype = ttype;
     }
 
     public Long getId() {

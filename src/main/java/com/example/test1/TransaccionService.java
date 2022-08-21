@@ -1,7 +1,8 @@
 package com.example.test1;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class TransaccionService {
@@ -12,15 +13,41 @@ public class TransaccionService {
         this.transaccionRepository = transaccionRepository;
     }
 
+
     public TransaccionModel nuevoDeposito(TransaccionModel transaccion){
-        transaccion.ttype = TransaccionModel.TRANSACTION_TYPE.DEPOSITO;
+        transaccion.setType(TransaccionModel.TRANSACTION_TYPE.DEPOSITO) ;
         return transaccionRepository.save(transaccion);
     }
 
     public TransaccionModel nuevaExtraccion(TransaccionModel transaccion){
         transaccion.monto *= -1;
-        transaccion.ttype = TransaccionModel.TRANSACTION_TYPE.EXTRACCION;
+        transaccion.setType(TransaccionModel.TRANSACTION_TYPE.EXTRACCION);
         return transaccionRepository.save(transaccion);
     }
 
+    public TransaccionModel nuevoInteres(double porcentaje){
+        TransaccionModel transaccion = new TransaccionModel();
+        transaccion.setType(TransaccionModel.TRANSACTION_TYPE.INTERES) ;
+        transaccion.monto = this.getSaldoActual().saldo * porcentaje / 100;
+        return transaccionRepository.save(transaccion);
+    }
+
+    public Saldo getSaldoActual() {
+        List<TransaccionModel> transacciones = this.obtenerTransacciones();
+
+        Saldo saldo = new Saldo();
+
+        for(TransaccionModel transaccion : transacciones) {
+            saldo.saldo += transaccion.monto;
+        }
+        return saldo;
+    }
+
+    public List<TransaccionModel> obtenerTransacciones() {
+        return transaccionRepository.findAll();
+    }
+
+    public List<TransaccionModel> obtenerExtracciones() {
+        return transaccionRepository.findAllByTtype(TransaccionModel.TRANSACTION_TYPE.EXTRACCION);
+    }
 }

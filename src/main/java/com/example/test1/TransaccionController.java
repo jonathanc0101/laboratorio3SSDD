@@ -1,11 +1,10 @@
 package com.example.test1;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
-@SpringBootApplication
 @RestController
 public class TransaccionController {
 
@@ -15,14 +14,14 @@ public class TransaccionController {
         this.transaccionService = transaccionService;
     }
 
-    @GetMapping("/hello")
-    public String sayHello(@RequestParam(value = "myName", defaultValue = "World") String name) {
-        return String.format("Hello %s!", name);
+    @GetMapping("/transacciones")
+    List<TransaccionModel> obtenerTransacciones() {
+        return transaccionService.obtenerTransacciones();
     }
 
-    @GetMapping("/saldo")
-    public Saldo returnSaldo() {
-        return new Saldo(1000);
+    @GetMapping("/extracciones")
+    List<TransaccionModel> obtenerExtracciones() {
+        return transaccionService.obtenerExtracciones();
     }
 
     @PostMapping("/deposito")
@@ -35,7 +34,10 @@ public class TransaccionController {
         return transaccionService.nuevaExtraccion(nuevaExtraccion);
     }
 
-  //  @PostMapping("/interes")
+    @PostMapping("/interes")
+    TransaccionModel nuevaExtraccion(@RequestBody InteresDTO extraccionDTO) {
+        return transaccionService.nuevoInteres(extraccionDTO.interes);
+    }
 
 
 
