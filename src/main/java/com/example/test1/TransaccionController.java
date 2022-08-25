@@ -35,13 +35,9 @@ public class TransaccionController {
     }
 
     @PostMapping("/interes")
-    TransaccionModel nuevaExtraccion(@RequestBody InteresDTO extraccionDTO) {
-        return transaccionService.nuevoInteres(extraccionDTO.interes);
+    TransaccionModel nuevoInteres(@RequestBody InteresDTO interesDTO) {
+        return transaccionService.nuevoInteres(interesDTO.interes);
     }
-
-
-
-
 
 }
 

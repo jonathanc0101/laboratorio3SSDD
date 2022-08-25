@@ -14,12 +14,6 @@ public class SaldoController {
         this.transaccionService = transaccionService;
     }
 
-
-    @GetMapping("/hello")
-    public String sayHello(@RequestParam(value = "myName", defaultValue = "World") String name) {
-        return String.format("Hello %s!", name);
-    }
-
     @GetMapping("/saldo")
     public Saldo returnSaldo() {
         return transaccionService.getSaldoActual();
