@@ -35,7 +35,6 @@ class ApplicationTest1Test2 {
 
     @BeforeEach
     void setUp() {
-        System.out.println("antes de la prueba");
         this.mvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
     }
 
@@ -92,12 +91,10 @@ class ApplicationTest1Test2 {
                     .andExpect(MockMvcResultMatchers.content().contentType(org.springframework.http.MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.saldo").value(2100));
 
-            System.out.println("durante la prueba");
         }
 
         @AfterEach
         void tearDown() {
-            System.out.println("prueba terminada");
         }
 
 

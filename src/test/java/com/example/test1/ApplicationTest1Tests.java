@@ -35,7 +35,6 @@ class ApplicationTest1Tests {
 
 	@BeforeEach
 	void setUp() {
-		System.out.println("antes de la prueba");
 		this.mvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
 	}
 
@@ -96,7 +95,6 @@ class ApplicationTest1Tests {
 
 	@AfterEach
 	void tearDown() {
-		System.out.println("prueba terminada");
 	}
 
 
