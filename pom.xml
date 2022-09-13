@@ -4,17 +4,17 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.1</version>
+        <version>2.7.3</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
     <groupId>bordero</groupId>
-    <artifactId>backend</artifactId>
+    <artifactId>bordero-be</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>backend</name>
+    <name>bordero-be</name>
     <description>Backend para bordero</description>
 
     <properties>
-        <java.version>16</java.version>
+        <java.version>17</java.version>
     </properties>
 
     <dependencies>
@@ -103,6 +103,101 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.40.2</version>
+                <configuration>
+                    <logDate>default</logDate>
+                    <autoPull>true</autoPull>
+                    <verbose>true</verbose>
+                    <dockerHost>unix:///var/run/docker.sock</dockerHost>
+                    <images>
+                        <image>
+                            <alias>${db}</alias>
+                            <name>postgres:13.8-alpine</name>
+                            <run>
+                                <env>
+                                    <POSTGRES_USER>borderoadm</POSTGRES_USER>
+                                    <POSTGRES_PASSWORD>borderoadm</POSTGRES_PASSWORD>
+                                    <POSTGRES_DB>borderodb</POSTGRES_DB>
+                                </env>
+                                <wait>
+                                    <log>database system is ready to accept connections</log>
+                                    <time>20000</time>
+                                </wait>
+                                <log>
+                                    <prefix>DB:</prefix>
+                                    <color>yellow</color>
+                                </log>
+                            </run>
+                        </image>
+
+                        <image>
+                            <alias>flyway</alias>
+                            <name>flyway/flyway</name>
+                            <run>
+                                <volumes>
+                                    <bind>
+                                        <volume>${basedir}/src/flyway:/flyway/sql</volume>
+                                    </bind>
+                                </volumes>
+                                <log>
+                                    <prefix>flyway:</prefix>
+                                    <color>green</color>
+                                </log>
+                                <dependsOn>
+                                    <container>${db}</container>
+                                </dependsOn>
+                                <links>
+                                    <link>${db}</link>
+                                </links>
+                                <cmd>-url=jdbc:postgresql://${db}:5432/borderodb -user=borderoadm -password=borderoadm
+                                    -connectRetries=60 migrate
+                                </cmd>
+                            </run>
+                        </image>
+
+                        <image>
+                            <name>${project.name}:${project.version}</name>
+                            <build>
+                                <from>openjdk:17</from>
+                                <assembly>
+                                    <name>build</name>
+                                    <descriptorRef>artifact</descriptorRef>
+                                </assembly>
+                                <ports>
+                                    <port>8080</port>
+                                </ports>
+                                <cmd>java -jar build/${project.name}-${project.version}.jar</cmd>
+                            </build>
+                            <run>
+                                <ports>
+                                    <port>${spring.port}:8080</port>
+                                </ports>
+                                <env>
+                                    <SPRING_DATASOURCE_URL>jdbc:postgresql://${db}:5432/borderodb</SPRING_DATASOURCE_URL>
+                                    <SPRING_DATASOURCE_USER>borderoadm</SPRING_DATASOURCE_USER>
+                                    <SPRING_DATASOURCE_PASSWORD>borderoadm</SPRING_DATASOURCE_PASSWORD>
+                                </env>
+                                <log>
+                                    <prefix>spring: </prefix>
+                                    <color>blue</color>
+                                </log>
+                                <dependsOn>
+                                    <container>${db}</container>
+                                </dependsOn>
+                                <links>
+                                    <link>${db}</link>
+                                </links>
+                                <wait>
+                                    <time>10000</time>
+                                </wait>
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
             </plugin>
         </plugins>
     </build>
