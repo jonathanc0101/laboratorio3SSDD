@@ -1,7 +1,3 @@
--- CREATE USER borderoadm WITH PASSWORD 'borderoadm';
-
--- CREATE DATABASE borderodb WITH OWNER borderoadm;
-
 CREATE TABLE public.customer
 (
     id     int8    NOT NULL,
