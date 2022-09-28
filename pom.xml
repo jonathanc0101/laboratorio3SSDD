@@ -8,43 +8,43 @@
 		<version>2.7.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>test1</artifactId>
+
+	<groupId>bordero</groupId>
+	<artifactId>bordero-be</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>test1</name>
-	<description>test1</description>
+	<name>bordero-be</name>
+	<description>Backend para bordero</description>
+
 	<properties>
 		<java.version>17</java.version>
 	</properties>
+
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
 		</dependency>
-
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
+			<groupId>com.github.dozermapper</groupId>
+			<artifactId>dozer-core</artifactId>
+			<version>6.5.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
+
 
 	<build>
 		<plugins>
@@ -52,7 +52,94 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M5</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>3.0.0-M5</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.40.2</version>
+				<configuration>
+					<logDate>default</logDate>
+					<autoPull>true</autoPull>
+					<verbose>true</verbose>
+					<dockerHost>unix:///var/run/docker.sock</dockerHost>
+					<images>
+						<image>
+							<alias>${db}</alias>
+							<name>postgres:13.8-alpine</name>
+							<run>
+								<env>
+									<POSTGRES_DB>borderodb</POSTGRES_DB>
+									<POSTGRES_USER>borderoadm</POSTGRES_USER>
+									<POSTGRES_PASSWORD>borderoadm</POSTGRES_PASSWORD>
+								</env>
+								<wait>
+									<log>database system is ready to accept connections</log>
+									<time>20000</time>
+								</wait>
+								<log>
+									<prefix>DB:</prefix>
+									<color>yellow</color>
+								</log>
+							</run>
+						</image>
+
+						<image>
+							<name>${project.name}:${project.version}</name>
+							<build>
+								<from>openjdk:17</from>
+								<assembly>
+									<name>build</name>
+									<descriptorRef>artifact</descriptorRef>
+								</assembly>
+								<ports>
+									<port>8080</port>
+								</ports>
+								<cmd>java -jar build/${project.name}-${project.version}.jar</cmd>
+							</build>
+							<run>
+								<ports>
+									<port>${spring.port}:8080</port>
+								</ports>
+								<env>
+									<SPRING_DATASOURCE_URL>jdbc:postgresql://${db}:5432/borderodb</SPRING_DATASOURCE_URL>
+									<SPRING_DATASOURCE_USER>borderoadm</SPRING_DATASOURCE_USER>
+									<SPRING_DATASOURCE_PASSWORD>borderoadm</SPRING_DATASOURCE_PASSWORD>
+								</env>
+								<log>
+									<prefix>spring: </prefix>
+									<color>blue</color>
+								</log>
+								<dependsOn>
+									<container>${db}</container>
+								</dependsOn>
+								<links>
+									<link>${db}</link>
+								</links>
+								<wait>
+									<time>10000</time>
+								</wait>
+							</run>
+						</image>
+					</images>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
-
 </project>

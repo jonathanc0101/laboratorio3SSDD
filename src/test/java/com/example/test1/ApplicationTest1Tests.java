@@ -24,6 +24,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Disabled
 class ApplicationTest1Tests {
 
 	private MockMvc mvc;

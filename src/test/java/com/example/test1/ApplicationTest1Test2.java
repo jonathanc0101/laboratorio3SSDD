@@ -24,6 +24,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
 class ApplicationTest1Test2 {
 
     private MockMvc mvc;
@@ -41,7 +42,7 @@ class ApplicationTest1Test2 {
     @Test
     @Order(2)
     public void simuladorTest() throws Exception {
-
+            URL url = new URL("http://localhost:8081/");
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
             ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
