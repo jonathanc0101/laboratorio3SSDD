@@ -1,4 +1,4 @@
-Como testear el repo:
+Como testear el laboratorio 2:
 
 correr el script que inicia las imagenes y esperar a que termine de correr:
 
@@ -11,3 +11,8 @@ activar el ambiente virtual de python (requiere python3):
 correr el script de python:
 
     python3 tests.py
+
+al terminar de correr el script deberían mostrarse los saldos e inserciones, lo unico que quedaría sería
+desactivar el ambiente virtual:
+
+    deactivate

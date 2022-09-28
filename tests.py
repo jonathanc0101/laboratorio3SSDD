@@ -31,19 +31,24 @@ def getSaldo(puerto):
     url = getUrl(puerto, rutas["getSaldo"])
     response = requests.get(url)
 
-    contenido =dict(response.json())
+    contenido = dict(response.json())
 
     return contenido["saldo"]
 
 
 def depositar(puerto, monto):
+    print("depositando " + monto + " en [" + puerto + "]")
+
     url = getUrl(puerto, rutas["postDeposito"])
     response = requests.post(url, data=getMontoJSON(monto), headers=hdr)
-    print(response.content)
 
 
 def test():
     imprimirSaldos()
+
+    saldoFinal = {"8081": getSaldo("8081")+600,
+                  "8082": getSaldo("8082")+700, 
+                  "8083": getSaldo("8083")+2500}
 
     depositar("8081", "100")
     depositar("8081", "100")
@@ -59,9 +64,11 @@ def test():
     depositar("8083", "100")
     depositar("8083", "2200")
 
-    print("SALDO ESPERADO [8081]:600")
-    print("SALDO ESPERADO [8082]:700")
-    print("SALDO ESPERADO [8083]:2500")
+    print("SALDO ESPERADO [8081]: " + str(saldoFinal["8081"]))
+    print("SALDO ESPERADO [8082]: " + str(saldoFinal["8082"]))
+    print("SALDO ESPERADO [8083]: " + str(saldoFinal["8083"]))
+
     imprimirSaldos()
+
 
 test()
