@@ -42,7 +42,6 @@ class ApplicationTest1Test2 {
     @Test
     @Order(2)
     public void simuladorTest() throws Exception {
-            URL url = new URL("http://localhost:8081/");
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
             ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();

@@ -9,11 +9,11 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-	<groupId>bordero</groupId>
-	<artifactId>bordero-be</artifactId>
+	<groupId>laboratorio2</groupId>
+	<artifactId>laboratorio2-be</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>bordero-be</name>
-	<description>Backend para bordero</description>
+	<name>laboratorio2-be</name>
+	<description>Backend para laboratorio2 de SSDD 2022</description>
 
 	<properties>
 		<java.version>17</java.version>
@@ -85,9 +85,9 @@
 							<name>postgres:13.8-alpine</name>
 							<run>
 								<env>
-									<POSTGRES_DB>borderodb</POSTGRES_DB>
-									<POSTGRES_USER>borderoadm</POSTGRES_USER>
-									<POSTGRES_PASSWORD>borderoadm</POSTGRES_PASSWORD>
+									<POSTGRES_DB>laboratorio2db</POSTGRES_DB>
+									<POSTGRES_USER>laboratorio2adm</POSTGRES_USER>
+									<POSTGRES_PASSWORD>laboratorio2adm</POSTGRES_PASSWORD>
 								</env>
 								<wait>
 									<log>database system is ready to accept connections</log>
@@ -118,9 +118,9 @@
 									<port>${spring.port}:8080</port>
 								</ports>
 								<env>
-									<SPRING_DATASOURCE_URL>jdbc:postgresql://${db}:5432/borderodb</SPRING_DATASOURCE_URL>
-									<SPRING_DATASOURCE_USER>borderoadm</SPRING_DATASOURCE_USER>
-									<SPRING_DATASOURCE_PASSWORD>borderoadm</SPRING_DATASOURCE_PASSWORD>
+									<SPRING_DATASOURCE_URL>jdbc:postgresql://${db}:5432/laboratorio2db</SPRING_DATASOURCE_URL>
+									<SPRING_DATASOURCE_USER>laboratorio2adm</SPRING_DATASOURCE_USER>
+									<SPRING_DATASOURCE_PASSWORD>laboratorio2adm</SPRING_DATASOURCE_PASSWORD>
 								</env>
 								<log>
 									<prefix>spring: </prefix>
