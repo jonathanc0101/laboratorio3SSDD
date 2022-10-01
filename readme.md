@@ -1,18 +1,17 @@
 Como testear el laboratorio 2:
 
-correr el script que inicia las imagenes y esperar a que termine de correr:
+
+Ejecutar el comando:
+    mvn clean verify docker:build
+
+Correr el script que inicia las imagenes y esperar a que termine de correr (alrededor de 30 segundos):
 
     sh startInstances.sh
 
-activar el ambiente virtual de python (requiere python3):
+Ejecutar el programa en java ubicado en:
 
-    source requests/bin/activate
+    "/src/test/java/com.example.test1/ApplicationTest1Tests"
 
-correr el script de python:
+Si esta todo bien se pueden cerrar los contenedores con el comando
 
-    python3 tests.py
-
-al terminar de correr el script deberían mostrarse los saldos e inserciones, lo unico que quedaría sería
-desactivar el ambiente virtual:
-
-    deactivate
+    sh stopInstances.sh

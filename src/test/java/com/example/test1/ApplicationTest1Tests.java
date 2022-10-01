@@ -1,102 +1,108 @@
 package com.example.test1;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
+import java.time.Duration;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Disabled
+
 class ApplicationTest1Tests {
 
-	private MockMvc mvc;
-	@Autowired
-	private WebApplicationContext webApplicationContext;
+	String getSaldo = "/saldo";
+	String postDeposito = "/deposito";
 
-	@Autowired
-	private TransaccionRepository transaccionRepository;
+	String url1 = "http://localhost:8081/api";
+	String url2 = "http://localhost:8082/api";
+	String url3 = "http://localhost:8083/api";
 
-	@BeforeEach
-	void setUp() {
-		this.mvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
-	}
 
 	@Test
-	@Order(1)
 	public void simuladorTest() throws Exception {
 
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-		ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-
-		transaccionRepository.deleteAll();
-		List<TransaccionModel> transacciones = transaccionRepository.findAll();
-		assertEquals(0, transacciones.size());
-
-		//transaccion auxiliar
-		TransaccionModel transaccionAux = new TransaccionModel();
-		transaccionAux.monto = 1000;
-
-		//interes auxiliar
-		InteresDTO interesAux = new InteresDTO();
-		interesAux.interes = 10;
+		double saldoFinalEsperado1 = 555;
+		double saldoFinalEsperado2 = 1986;
+		double saldoFinalEsperado3 = 2047;
 
 
-		//requests
-		RequestBuilder requestDeposito = MockMvcRequestBuilders.post("/deposito").contentType(APPLICATION_JSON).content(ow.writeValueAsString(transaccionAux));
-		RequestBuilder requestExtraccion = MockMvcRequestBuilders.post("/extraccion").contentType(APPLICATION_JSON).content(ow.writeValueAsString(transaccionAux));
-		RequestBuilder requestSaldo = MockMvcRequestBuilders.get("/saldo");
-		RequestBuilder requestInteres = MockMvcRequestBuilders.post("/interes").contentType(APPLICATION_JSON).content(ow.writeValueAsString(interesAux));
+		WebClient webClient1 = WebClient.builder()
+				.baseUrl(url1)
+				.build();
 
-		// Deposito 1, saldo actual: 1000
-		this.mvc.perform(requestDeposito).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.content().contentType(org.springframework.http.MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.monto").value(1000));
-		System.out.println("durante la prueba");
+		WebClient webClient2 = WebClient.builder()
+				.baseUrl(url2)
+				.build();
+
+		WebClient webClient3 = WebClient.builder()
+				.baseUrl(url3)
+				.build();
+
+		Saldo saldoInicial1 = getSaldoActual(webClient1);
+		Saldo saldoInicial2 = getSaldoActual(webClient2);
+		Saldo saldoInicial3 = getSaldoActual(webClient3);
+
+		saldoFinalEsperado1 += saldoInicial1.saldo;
+		saldoFinalEsperado2 += saldoInicial2.saldo;
+		saldoFinalEsperado3 += saldoInicial3.saldo;
+
+		hacerPostDeposito(100,webClient1);
+		hacerPostDeposito(100,webClient1);
+		hacerPostDeposito(100,webClient1);
+		hacerPostDeposito(100,webClient1);
+		hacerPostDeposito(100,webClient1);
+		hacerPostDeposito(55,webClient1);
+
+		hacerPostDeposito(1000,webClient2);
+		hacerPostDeposito(900,webClient2);
+		hacerPostDeposito(80,webClient2);
+		hacerPostDeposito(6,webClient2);
+
+		hacerPostDeposito(1000,webClient3);
+		hacerPostDeposito(1000,webClient3);
+		hacerPostDeposito(47,webClient3);
 
 
+		Saldo saldoFinal1 = getSaldoActual(webClient1);
+		Saldo saldoFinal2 = getSaldoActual(webClient2);
+		Saldo saldoFinal3 = getSaldoActual(webClient3);
 
-		//2do deposito, saldo actual: 2000
-		this.mvc.perform(requestDeposito).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.content().contentType(org.springframework.http.MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.monto").value(1000));
-
-
-		//1er interés, monto esperado: 200, saldo luego: 2200
-		this.mvc.perform(requestInteres).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.content().contentType(org.springframework.http.MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.monto").value(200));
+		assertEquals(saldoFinalEsperado1,saldoFinal1.saldo );
+		assertEquals(saldoFinalEsperado2,saldoFinal2.saldo);
+		assertEquals(saldoFinalEsperado3,saldoFinal3.saldo);
 
 
-		//1ra consulta de saldo
-		this.mvc.perform(requestSaldo).andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.content().contentType(org.springframework.http.MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.saldo").value(2200));
+		System.out.println("TEST PASSED SUCCESSFULLY");
 
-		System.out.println("durante la prueba");
 	}
 
-	@AfterEach
-	void tearDown() {
+	Saldo getSaldoActual(WebClient webClient){
+		return webClient.get()
+				.uri(getSaldo)
+				.accept(MediaType.APPLICATION_JSON)
+				.retrieve()
+				.bodyToMono(Saldo.class)
+				.block();
 	}
 
+	void hacerPostDeposito(double valor, WebClient webClient){
+		TransaccionModel monto = new TransaccionModel(valor);
+
+		webClient.post()
+				.uri(postDeposito)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON )
+				.body(Mono.just(monto), TransaccionModel.class)
+				.retrieve()
+				.bodyToMono(TransaccionModel.class)
+				.block();
+	}
 
 }
