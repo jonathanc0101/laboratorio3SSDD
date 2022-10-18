@@ -1,5 +1,8 @@
 package bordero.dto;
 
+import lombok.ToString;
+
+@ToString
 public class PlayDTO extends DTO {
 
     public final String code;

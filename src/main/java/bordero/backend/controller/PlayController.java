@@ -1,22 +1,24 @@
 package bordero.backend.controller;
 
+import bordero.backend.kafka.Producer;
 import bordero.backend.model.Play;
 import bordero.backend.service.PlayService;
 import bordero.backend.service.Response;
 import bordero.dto.PlayDTO;
 import bordero.dto.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping(path = "/plays", produces = "application/json")
 public class PlayController extends CRUDRestController<PlayDTO, Play> {
-
+    @Autowired
+    Producer<PlayDTO> producer;
     public PlayController(PlayService service, DTOModelMapper<PlayDTO, Play> mapper) {
         super(service, mapper);
     }
@@ -24,6 +26,16 @@ public class PlayController extends CRUDRestController<PlayDTO, Play> {
     @Override
     protected String url() {
         return "/plays/";
+    }
+
+    @Override
+    @PostMapping("")
+    public ResponseEntity<ResponseDTO<PlayDTO>> insert(@RequestBody PlayDTO inDTO) {
+        ResponseDTO<PlayDTO> outDTO = executeInsert(inDTO);
+        if (!outDTO.isValid()) return ResponseEntity.badRequest().body(outDTO);
+        producer.logCreate("plays", inDTO);
+        return ResponseEntity
+                .created(URI.create(url() + outDTO.value.id)).body(outDTO);
     }
 
     @GetMapping(value = "", params = "code")

@@ -49,27 +49,27 @@ class ITPlayCRUD {
         client = new RestCRUDClient<PlayDTO>();
         client.setClazz(PlayDTO.class);
         client.setUrl(baseURL());
-        plays = Arrays.asList(new PlayDTO[]{
-                new PlayDTO("as-like", "As You Like It", "comedy"),
-                new PlayDTO("othello", "Othello", "tragedy"),
-                new PlayDTO("otroplay1", "Otro Play 1", "tragedy"),
-                new PlayDTO("otroplay2", "Otro Play 2", "comedy"),
-                new PlayDTO("otroplay3", "Otro Play 3", "tragedy"),
-                new PlayDTO("otroplay4", "Otro Play 4", "tragedy"),
-                new PlayDTO("otroplay5", "Otro Play 5", "comedy"),
-                new PlayDTO("otroplay6", "Otro Play 6", "comedy"),
-                new PlayDTO("otroplay7", "Otro Play 7", "tragedy"),
-        });
-        plays = plays.stream()
-                .map(play -> {
-                    ResponseDTO<PlayDTO> res = client.create(play).getBody();
-                    return res.value;
-                }).collect(Collectors.toList());
+//        plays = Arrays.asList(new PlayDTO[]{
+//                new PlayDTO("as-like", "As You Like It", "comedy"),
+//                new PlayDTO("othello", "Othello", "tragedy"),
+//                new PlayDTO("otroplay1", "Otro Play 1", "tragedy"),
+//                new PlayDTO("otroplay2", "Otro Play 2", "comedy"),
+//                new PlayDTO("otroplay3", "Otro Play 3", "tragedy"),
+//                new PlayDTO("otroplay4", "Otro Play 4", "tragedy"),
+//                new PlayDTO("otroplay5", "Otro Play 5", "comedy"),
+//                new PlayDTO("otroplay6", "Otro Play 6", "comedy"),
+//                new PlayDTO("otroplay7", "Otro Play 7", "tragedy"),
+//        });
+//        plays = plays.stream()
+//                .map(play -> {
+//                    ResponseDTO<PlayDTO> res = client.create(play).getBody();
+//                    return res.value;
+//                }).collect(Collectors.toList());
     }
 
     @AfterAll
     public void dispose() {
-        plays.stream().map(play -> client.delete(play.id)).collect(Collectors.toList());
+//        plays.stream().map(play -> client.delete(play.id)).collect(Collectors.toList());
     }
 
     @Test
