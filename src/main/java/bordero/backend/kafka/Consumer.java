@@ -23,7 +23,7 @@ public class Consumer {
     @Value("${bordero.server.id}")
     private String serverId;
 
-    @KafkaListener(topics="plays", groupId = "bordero-kafka")
+    @KafkaListener(topics="plays", groupId = "${bordero.server.id}")
     public void consume(Event event) {
         log.info("Event received at: " + serverId);
         log.info("Consuming event: " + event.toString());
