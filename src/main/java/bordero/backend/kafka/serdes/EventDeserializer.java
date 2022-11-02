@@ -1,9 +1,9 @@
 package bordero.backend.kafka.serdes;
 
-import bordero.backend.kafka.Event;
-import bordero.dto.PlayDTO;
+import backend.TransaccionModel;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kafka.Event;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
@@ -23,7 +23,7 @@ public class EventDeserializer implements Deserializer<Event> {
             log.debug("Deserializando ...");
             return mapper.readValue(
                     new String(data, "UTF-8"),
-                    new TypeReference<Event<PlayDTO>>() {
+                    new TypeReference<Event<TransaccionModel>>() {
                     });
         } catch (Exception e) {
             throw new SerializationException("Error en la deserialización de byte[] a Event");

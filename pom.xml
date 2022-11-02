@@ -124,43 +124,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-maven-plugin</artifactId>
-                <version>8.5.13</version>
-                <configuration>
-                    <driver>org.postgresql.Driver</driver>
-                    <url>jdbc:postgresql://localhost:5432/borderodb</url>
-                    <user>borderoadm</user>
-                    <password>borderoadm</password>
-                    <locations>
-                        <location>filesystem:src/flyway/sql-1</location>
-                    </locations>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.postgresql</groupId>
-                        <artifactId>postgresql</artifactId>
-                        <version>RELEASE</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <id>clean-flyway</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>migrate-flyway</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>migrate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>0.40.2</version>
@@ -191,30 +154,6 @@
                             </run>
                         </image>
 
-                        <image>
-                            <alias>flyway</alias>
-                            <name>flyway/flyway</name>
-                            <run>
-                                <volumes>
-                                    <bind>
-                                        <volume>${basedir}/src/flyway:/flyway/sql</volume>
-                                    </bind>
-                                </volumes>
-                                <log>
-                                    <prefix>flyway:</prefix>
-                                    <color>green</color>
-                                </log>
-                                <dependsOn>
-                                    <container>${db}</container>
-                                </dependsOn>
-                                <links>
-                                    <link>${db}</link>
-                                </links>
-                                <cmd>-url=jdbc:postgresql://${db}:5432/borderodb -user=borderoadm -password=borderoadm
-                                    -connectRetries=60 migrate
-                                </cmd>
-                            </run>
-                        </image>
 
                         <image>
                             <name>${project.name}:${project.version}</name>

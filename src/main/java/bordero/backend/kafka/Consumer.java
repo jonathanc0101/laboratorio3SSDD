@@ -1,9 +1,7 @@
 package bordero.backend.kafka;
 
-import bordero.backend.controller.DTOModelMapper;
-import bordero.backend.model.Play;
-import bordero.backend.service.PlayService;
-import bordero.dto.PlayDTO;
+import backend.TransaccionModel;
+import backend.test1.TransaccionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,23 +13,20 @@ import org.springframework.stereotype.Component;
 public class Consumer {
 
     @Autowired
-    PlayService playService;
-
-    @Autowired
-    DTOModelMapper<PlayDTO, Play> mapper;
+    TransaccionService transaccionService;
 
     @Value("${bordero.server.id}")
     private String serverId;
 
-    @KafkaListener(topics="plays", groupId = "${bordero.server.id}")
+    @KafkaListener(topics="operaciones", groupId = "bordero-kafka")
     public void consume(Event event) {
         log.info("Event received at: " + serverId);
         log.info("Consuming event: " + event.toString());
          if (serverId.compareTo(event.serverId)!=0) {
              if (event.type == EventType.CREATE) {
-                 Play play = mapper.toModel((PlayDTO) event.dto);
-                 playService.insert(play);
-                 log.info("Play inserted by consumer");
+                 TransaccionModel transaccion = (TransaccionModel) event.dto;
+                 transaccionService.insert(transaccion);
+                 log.info("Transaction inserted by consumer");
              }
          }
     }

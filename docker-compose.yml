@@ -185,13 +185,6 @@ services:
       - POSTGRES_PASSWORD=borderoadm
       - POSTGRES_DB=borderodb
 
-  flyway-a:
-    image: flyway/flyway
-    command: -url=jdbc:postgresql://dba:5432/borderodb -user=borderoadm -password=borderoadm -connectRetries=60 migrate
-    volumes:
-      - ./src/flyway:/flyway/sql
-    depends_on:
-      - dba
 
   bordero-backend-a:
     build: .
@@ -204,7 +197,6 @@ services:
       - BORDERO_SERVER_ID=Bordero-A
     depends_on:
       - dba
-      - flyway-a
       - broker
 
   dbb:
@@ -215,14 +207,6 @@ services:
       - POSTGRES_USER=borderoadm
       - POSTGRES_PASSWORD=borderoadm
       - POSTGRES_DB=borderodb
-
-  flyway-b:
-    image: flyway/flyway
-    command: -url=jdbc:postgresql://dbb:5432/borderodb -user=borderoadm -password=borderoadm -connectRetries=60 migrate
-    volumes:
-      - ./src/flyway:/flyway/sql
-    depends_on:
-      - dbb
 
   bordero-backend-b:
     build: .
@@ -235,6 +219,5 @@ services:
       - BORDERO_SERVER_ID=Bordero-B
     depends_on:
       - dbb
-      - flyway-b
       - broker
 
