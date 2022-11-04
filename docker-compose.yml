@@ -176,6 +176,7 @@ services:
       KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
       KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
 
+
   dba:
     image: postgres:13.8-alpine
     expose:
@@ -188,7 +189,7 @@ services:
   laboratorio3-backend-a:
     build: .
     ports:
-      - 8092:8080
+      - 8091:8080
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://dba:5432/borderodb
       - SPRING_DATASOURCE_USER=borderoadm
@@ -197,7 +198,6 @@ services:
     depends_on:
       - dba
       - broker
-      - control-center
 
   dbb:
     image: postgres:13.8-alpine
@@ -211,7 +211,7 @@ services:
   laboratorio3-backend-b:
     build: .
     ports:
-      - 8091:8080
+      - 8092:8080
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://dbb:5432/borderodb
       - SPRING_DATASOURCE_USER=borderoadm
@@ -220,5 +220,4 @@ services:
     depends_on:
       - dbb
       - broker
-      - control-center
 

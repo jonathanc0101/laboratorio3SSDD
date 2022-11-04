@@ -29,21 +29,21 @@ public class TransaccionController {
     @PostMapping("/deposito")
     TransaccionModel nuevoDeposito(@RequestBody TransaccionModel nuevoDeposito) {
         TransaccionModel transaccionResponse = transaccionService.nuevoDeposito(nuevoDeposito);
-        producer.logCreate("operaciones", transaccionResponse);
+        producer.logCreate("transacciones", transaccionResponse);
         return transaccionResponse;
     }
 
     @PostMapping("/extraccion")
     TransaccionModel nuevaExtraccion(@RequestBody TransaccionModel nuevaExtraccion) {
         TransaccionModel transaccionResponse = transaccionService.nuevaExtraccion(nuevaExtraccion);
-        producer.logCreate("operaciones", transaccionResponse);
+        producer.logCreate("transacciones", transaccionResponse);
         return transaccionResponse;
     }
 
     @PostMapping("/interes")
     TransaccionModel nuevoInteres(@RequestBody InteresDTO interesDTO) {
         TransaccionModel transaccionResponse = transaccionService.nuevoInteres(interesDTO.interes);
-        producer.logCreate("operaciones", transaccionResponse);
+        producer.logCreate("transacciones", transaccionResponse);
         return transaccionResponse;
     }
 

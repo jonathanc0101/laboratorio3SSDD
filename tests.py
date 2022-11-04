@@ -51,19 +51,20 @@ def test():
                   "8091": getSaldo("8091")+1300
                   }
 
-    depositar("8092", "100")
-    depositar("8092", "500")
-    depositar("8092", "100")
-
     depositar("8091", "100")
     depositar("8091", "300")
     depositar("8091", "100")
     depositar("8091", "100")
 
+    depositar("8092", "100")
+    depositar("8092", "500")
+    depositar("8092", "100")
 
 
-    print("SALDO ESPERADO [8092]: " + str(saldoFinal["8092"]))
+
+
     print("SALDO ESPERADO [8091]: " + str(saldoFinal["8091"]))
+    print("SALDO ESPERADO [8092]: " + str(saldoFinal["8092"]))
 
     sleep(2)
     imprimirSaldos()

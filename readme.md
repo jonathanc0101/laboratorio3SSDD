@@ -1,7 +1,10 @@
 ## Guia para verificar la consistencia entre instancias
 ### Correr los comandos:
 
-`mvn clean install` 
+`mvn dependency:resolve`
+
+`mvn clean package`
+
 
 `docker-compose build`
 
@@ -12,11 +15,12 @@ en caso de que no levante todo o algún
 contenedor se caiga, hacer `docker-compose down`
 e intentar de vuelta. 
 
-Esperar hasta que el broker se estabilice. Lo indica enviando el mensaje ""
+Esperar hasta que el broker se estabilice. Lo indica enviando el mensaje "Stabilized group Bordero-B..."
 
-Esperar hasta que los dos containers llamados laboratorio3 a y b 
-respectivamente terminen de iniciarse, y que se les asigne una particion de
-kafka a cada uno (está bien si a uno le aparece que las particiones asignadas son un array vacío).
+Esperar hasta que los containers correspondientes a los backends terminen de iniciarse, y que se les asigne una particion de
+kafka a cada uno.
+
+Si a alguno no se le asigna una partición, reiniciar los tres containers de backend y esperar a que se les asigne una partición. 
 
 correr `sh ./runTests.sh`
 
