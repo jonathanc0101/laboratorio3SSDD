@@ -1,7 +1,7 @@
 package bordero.backend.kafka;
 
-import backend.TransaccionModel;
-import backend.test1.TransaccionService;
+import bordero.backend.TransaccionModel;
+import bordero.backend.TransaccionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +22,7 @@ public class Consumer {
     public void consume(Event event) {
         log.info("Event received at: " + serverId);
         log.info("Consuming event: " + event.toString());
+        log.info("comparation serverId.compareTo(event.serverId)" + serverId.compareTo(event.serverId));
          if (serverId.compareTo(event.serverId)!=0) {
              if (event.type == EventType.CREATE) {
                  TransaccionModel transaccion = (TransaccionModel) event.dto;

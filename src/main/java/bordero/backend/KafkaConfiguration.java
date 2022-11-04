@@ -4,7 +4,6 @@ import bordero.backend.kafka.Event;
 import bordero.backend.kafka.Producer;
 import bordero.backend.kafka.serdes.EventDeserializer;
 import bordero.backend.kafka.serdes.EventSerializer;
-import bordero.dto.PlayDTO;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.IntegerDeserializer;
@@ -23,7 +22,7 @@ public class KafkaConfiguration {
     private String bootstrapServer;
 
     @Bean
-    public ProducerFactory<Integer, Event<PlayDTO>> producerFactoryPlayDTO() {
+    public ProducerFactory<Integer, Event<TransaccionModel>> producerFactoryPlayDTO() {
         return new DefaultKafkaProducerFactory<>(
                 Map.of(
                         ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer,
@@ -51,12 +50,12 @@ public class KafkaConfiguration {
     }
 
     @Bean
-    public KafkaTemplate<Integer, Event<PlayDTO>> kafkaTemplatePlayDTO() {
+    public KafkaTemplate<Integer, Event<TransaccionModel>> kafkaTemplatePlayDTO() {
         return new KafkaTemplate<>(producerFactoryPlayDTO());
     }
 
     @Bean
-    public Producer<PlayDTO> producerPlayDTO() {
-        return new Producer<PlayDTO>(kafkaTemplatePlayDTO());
+    public Producer<TransaccionModel> producerPlayDTO() {
+        return new Producer<TransaccionModel>(kafkaTemplatePlayDTO());
     }
 }

@@ -185,11 +185,10 @@ services:
       - POSTGRES_PASSWORD=borderoadm
       - POSTGRES_DB=borderodb
 
-
-  bordero-backend-a:
+  laboratorio3-backend-a:
     build: .
     ports:
-      - 8090:8080
+      - 8092:8080
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://dba:5432/borderodb
       - SPRING_DATASOURCE_USER=borderoadm
@@ -198,6 +197,7 @@ services:
     depends_on:
       - dba
       - broker
+      - control-center
 
   dbb:
     image: postgres:13.8-alpine
@@ -208,7 +208,7 @@ services:
       - POSTGRES_PASSWORD=borderoadm
       - POSTGRES_DB=borderodb
 
-  bordero-backend-b:
+  laboratorio3-backend-b:
     build: .
     ports:
       - 8091:8080
@@ -220,4 +220,5 @@ services:
     depends_on:
       - dbb
       - broker
+      - control-center
 

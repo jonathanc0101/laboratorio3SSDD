@@ -1,7 +1,7 @@
 package bordero.backend.kafka.serdes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kafka.Event;
+import bordero.backend.kafka.Event;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Serializer;
